@@ -17,6 +17,7 @@ type Props = {
 const CommentsSection = ({ postId }: Props) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState('');
+  const [showComments, setShowComments] = useState(false);
 
   const user = getLoggedInUser();
 
@@ -43,19 +44,22 @@ const CommentsSection = ({ postId }: Props) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           post_id: postId,
-          user_id: user?.user_id, // Replace this with actual user ID later
+          user_id: user?.user_id,
           content: newComment,
         }),
       });
 
       if (res.ok) {
         const added = await res.json();
-        setComments((prev) => [...prev, {
-          comment_id: added.commentId,
-          content: newComment,
-          username: 'CurrentUser', // Replace later with real username
-          created_at: new Date().toISOString(),
-        }]);
+        setComments((prev) => [
+          ...prev,
+          {
+            comment_id: added.commentId,
+            content: newComment,
+            username: user?.username || 'CurrentUser',
+            created_at: new Date().toISOString(),
+          },
+        ]);
         setNewComment('');
       } else {
         console.error('Failed to add comment');
@@ -67,17 +71,29 @@ const CommentsSection = ({ postId }: Props) => {
 
   return (
     <div className="mt-4">
-      <h2 className="font-semibold mb-2">Comments</h2>
-      <div className="space-y-2">
-        {comments.map((c) => (
-          <div key={c.comment_id} className="border p-2 rounded">
-            <p className="text-sm">{c.content}</p>
-            <span className="text-xs text-gray-500">
-              {c.username} • {new Date(c.created_at).toLocaleString()}
-            </span>
-          </div>
-        ))}
+      <div className="flex items-center justify-between">
+        <h2 className="font-semibold">Comments ({comments.length})</h2>
+        <button
+          onClick={() => setShowComments((prev) => !prev)}
+          className="text-sm text-blue-500 hover:underline"
+        >
+          {showComments ? 'Hide Comments' : 'Show Comments'}
+        </button>
       </div>
+
+      {showComments && (
+        <div className="space-y-2 mt-2">
+          {comments.map((c) => (
+            <div key={c.comment_id} className="border p-2 rounded">
+              <p className="text-sm">{c.content}</p>
+              <span className="text-xs text-gray-500">
+                {c.username} • {new Date(c.created_at).toLocaleString()}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+
       <div className="mt-3">
         <textarea
           className="w-full border rounded p-2"
