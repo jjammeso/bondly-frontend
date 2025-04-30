@@ -2,11 +2,14 @@
 
 import { useState } from 'react';
 import { redirect, useRouter } from 'next/navigation';
+import { useAuth } from '@/contex/AuthContext';
+import { FcGoogle } from "react-icons/fc";
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const {authorized, setAuthorized} = useAuth();
     const router = useRouter();
 
     const handleLogin = async (e: React.FormEvent) => {
@@ -25,7 +28,9 @@ const LoginPage = () => {
             if (res.ok) {
                 const data = await res.json();
                 localStorage.setItem('token', data.token); // ← Save user
+                setAuthorized(true);
                 router.push('/home'); // redirect after successful login
+
             } else {
                 const data = await res.json();
                 setError(data.message || 'Login failed');
@@ -39,7 +44,8 @@ const LoginPage = () => {
 
     const handleGoogleLogin = async () => {
         try {
-            window.location.href = 'http://localhost:5000/api/googleAuth/google'; 
+            setAuthorized(true);
+            window.location.href = 'http://localhost:5000/api/googleAuth/google';
         } catch (err) {
             console.error('Google login error:', err);
             setError('Something went wrong during Google login');
@@ -79,8 +85,8 @@ const LoginPage = () => {
                 <div className="mt-4 text-center">
                     <button
                         onClick={handleGoogleLogin}
-                        className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700"
-                    >
+                        className="w-full flex items-center justify-center gap-2 bg-neutral-600 text-white py-2 rounded hover:bg-red-700"                    >
+                        <FcGoogle className="text-xl bg-white rounded-full" />
                         Log In with Google
                     </button>
                 </div>

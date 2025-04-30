@@ -33,7 +33,7 @@ const CreatePost = () => {
             }
 
             const data = await response.json();
-            console.log('Post created:', data); router.push('/home'); // Redirect to the home page after successful post creation
+            console.log('Post created:', data); router.push('/home');
         } catch (err) {
             console.error('Error creating post:', err);
         }

@@ -4,9 +4,12 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/contex/AuthContext';
 
 const SuccessPage = () => {
   const router = useRouter();
+    const {authorized, setAuthorized} = useAuth();
+  
 
   useEffect(() => {
     // Capture the token from the URL query parameters
@@ -15,6 +18,7 @@ const SuccessPage = () => {
     if (token) {
       // Store the token in localStorage
       localStorage.setItem('token', token);
+      setAuthorized(true);
 
       // Optionally, you can redirect the user to a different page
       router.push('/home'); // or any other page you want

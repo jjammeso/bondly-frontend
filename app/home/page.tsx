@@ -9,9 +9,11 @@ import { getToken } from '@/lib/auth';
 const Home = () => {
     const [posts, setPosts] = useState<any[]>([]);
 
+    const token = getToken();
+
+
     useEffect(() => {
         const fetchPosts = async () => {
-            const token = getToken();
 
             try {
                 // Fetch posts from the backend (replace with your actual API endpoint)
