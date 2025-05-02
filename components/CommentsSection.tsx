@@ -1,10 +1,11 @@
 'use client';
 
-import { getLoggedInUser } from '@/lib/auth';
+import { getLoggedInUser, getToken } from '@/lib/auth';
 import { useState, useEffect } from 'react';
 
 type Comment = {
   comment_id: number;
+  user_id: number;
   content: string;
   username: string;
   created_at: string;
@@ -20,6 +21,7 @@ const CommentsSection = ({ postId }: Props) => {
   const [showComments, setShowComments] = useState(false);
 
   const user = getLoggedInUser();
+  const token = getToken();
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -41,7 +43,10 @@ const CommentsSection = ({ postId }: Props) => {
     try {
       const res = await fetch('http://localhost:5000/api/comments', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': `JWT ${token}`,
+        },
         body: JSON.stringify({
           post_id: postId,
           user_id: user?.user_id,
@@ -55,6 +60,7 @@ const CommentsSection = ({ postId }: Props) => {
           ...prev,
           {
             comment_id: added.commentId,
+            user_id: user?.user_id!,
             content: newComment,
             username: user?.username || 'CurrentUser',
             created_at: new Date().toISOString(),
@@ -68,6 +74,28 @@ const CommentsSection = ({ postId }: Props) => {
       console.error('Error adding comment:', err);
     }
   };
+
+  const handleDeleteComment = async (commentId: number) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/comments/${commentId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'authorization': `JWT ${token}`,
+        },
+      });
+
+      if (res.ok) {
+        setComments((prev) => prev.filter((c) => c.comment_id !== commentId));
+      } else {
+        console.error('Failed to delete comment');
+      }
+    } catch (err) {
+      console.error('Error deleting comment:', err);
+    }
+  };
+
+  console.log('here is user', user, comments)
 
   return (
     <div className="mt-4">
@@ -84,11 +112,19 @@ const CommentsSection = ({ postId }: Props) => {
       {showComments && (
         <div className="space-y-2 mt-2">
           {comments.map((c) => (
-            <div key={c.comment_id} className="border p-2 rounded">
+            <div key={c.comment_id} className="border p-2 rounded relative">
               <p className="text-sm">{c.content}</p>
               <span className="text-xs text-gray-500">
                 {c.username} • {new Date(c.created_at).toLocaleString()}
               </span>
+              {Number(c.user_id) === user?.user_id && (
+                <button
+                  onClick={() => handleDeleteComment(c.comment_id)}
+                  className="absolute top-2 right-2 text-xs text-red-500 hover:underline"
+                >
+                  Delete
+                </button>
+              )}
             </div>
           ))}
         </div>
