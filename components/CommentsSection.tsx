@@ -95,8 +95,6 @@ const CommentsSection = ({ postId }: Props) => {
     }
   };
 
-  console.log('here is user', user, comments)
-
   return (
     <div className="mt-4">
       <div className="flex items-center justify-between">

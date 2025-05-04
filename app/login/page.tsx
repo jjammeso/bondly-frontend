@@ -23,8 +23,6 @@ const LoginPage = () => {
                 body: JSON.stringify({ email, password }),
             });
 
-
-
             if (res.ok) {
                 const data = await res.json();
                 localStorage.setItem('token', data.token); // ← Save user
@@ -41,10 +39,8 @@ const LoginPage = () => {
         }
     };
 
-
     const handleGoogleLogin = async () => {
         try {
-            setAuthorized(true);
             window.location.href = 'http://localhost:5000/api/googleAuth/google';
         } catch (err) {
             console.error('Google login error:', err);
@@ -85,11 +81,20 @@ const LoginPage = () => {
                 <div className="mt-4 text-center">
                     <button
                         onClick={handleGoogleLogin}
-                        className="w-full flex items-center justify-center gap-2 bg-neutral-600 text-white py-2 rounded hover:bg-red-700"                    >
+                        className="w-full flex items-center justify-center gap-2 bg-neutral-600 text-white py-2 rounded hover:bg-red-700"
+                    >
                         <FcGoogle className="text-xl bg-white rounded-full" />
                         Log In with Google
                     </button>
                 </div>
+
+                {/* Link to Register Page */}
+                <p className="text-center mt-4 text-sm">
+                    Don't have an account?{' '}
+                    <a href="/register" className="text-blue-600 hover:underline">
+                        Register here
+                    </a>
+                </p>
             </div>
         </div>
     );
