@@ -26,7 +26,7 @@ const CommentsSection = ({ postId }: Props) => {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/comments/${postId}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/comments/${postId}`);
         const data = await res.json();
         setComments(data);
       } catch (err) {
@@ -41,7 +41,7 @@ const CommentsSection = ({ postId }: Props) => {
     if (!newComment.trim()) return;
 
     try {
-      const res = await fetch('http://localhost:5000/api/comments', {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/comments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,7 +77,7 @@ const CommentsSection = ({ postId }: Props) => {
 
   const handleDeleteComment = async (commentId: number) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/comments/${commentId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/comments/${commentId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

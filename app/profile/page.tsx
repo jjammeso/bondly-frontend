@@ -36,7 +36,7 @@ const Profile = () => {
     useEffect(() => {
         const fetchUserPosts = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/posts/user/${user?.user_id}`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/posts/user/${user?.user_id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -66,7 +66,7 @@ const Profile = () => {
         if (!confirm('Are you sure you want to delete this post?')) return;
 
         try {
-            const response = await fetch(`http://localhost:5000/api/posts/${postId}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/posts/${postId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

@@ -17,7 +17,7 @@ const LikeButton = ({ postId, userId = 1 }: Props) => {
   useEffect(() => {
     const fetchLikes = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/likes/${postId}`,
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/likes/${postId}`,
           {
             method: 'GET',
             headers: { 'Content-Type': 'application/json', 'authorization': `JWT ${token}` },
@@ -36,7 +36,7 @@ const LikeButton = ({ postId, userId = 1 }: Props) => {
 
   const handleLikeToggle = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/likes`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/likes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'authorization': `JWT ${token}` },
         body: JSON.stringify({ post_id: postId, user_id: userId }),
