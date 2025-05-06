@@ -6,16 +6,29 @@ import LikeButton from '@/components/LikeButton';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { getLoggedInUser, getToken } from '@/lib/auth';
 
+interface Post {
+    post_id: number;
+    content: string;
+    username: string;
+    created_at: string;
+}
+
+interface DecodedUser {
+    user_id: number;
+    username: string;
+  }
+
 const Profile = () => {
-    const [posts, setPosts] = useState<any[]>([]);
+    const [posts, setPosts] = useState<Post[]>([]);
     const [loading, setLoading] = useState(true);
-    const [user, setUser] = useState<any>(null);
+    const [user, setUser] = useState<DecodedUser | null>(null);
     const [token, setToken] = useState<string | null>(null);
 
 
     useEffect(() => {
         const u = getLoggedInUser();
         const t = getToken();
+        if(u)
         setUser(u);
         setToken(t);
     }, []);
@@ -75,7 +88,7 @@ const Profile = () => {
     return (
         <ProtectedRoute>
             <div className="container mx-auto px-4 py-6">
-                <h1 className="text-2xl font-bold mb-4">My Posts</h1>
+                <h1 className="text-2xl font-bold mb-4 text-center">My Posts</h1>
                 {loading ? (
                     <p>Loading your posts...</p>
                 ) : posts.length === 0 ? (

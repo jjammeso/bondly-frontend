@@ -8,7 +8,7 @@ import { useAuth } from '@/contex/AuthContext';
 
 const SuccessPage = () => {
   const router = useRouter();
-    const {authorized, setAuthorized} = useAuth();
+    const { setAuthorized} = useAuth();
   
 
   useEffect(() => {

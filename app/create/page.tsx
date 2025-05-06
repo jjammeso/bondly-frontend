@@ -14,28 +14,29 @@ const CreatePost = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        try {
-            const response = await fetch('http://localhost:5000/api/posts', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': `JWT ${token}`
-                },
-                body: JSON.stringify({ 
-                    content,
-                    user_id: user?.user_id,
-                }),
-            });
-
-            console.log(response);
-            if (!response.ok) {
-                throw new Error('Failed to create post');
+        if(user){
+            try {
+                const response = await fetch('http://localhost:5000/api/posts', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'authorization': `JWT ${token}`
+                    },
+                    body: JSON.stringify({ 
+                        content,
+                        user_id: user?.user_id,
+                    }),
+                });
+    
+                console.log(response);
+                if (!response.ok) {
+                    throw new Error('Failed to create post');
+                }
+    
+               router.push('/home');
+            } catch (err) {
+                console.error('Error creating post:', err);
             }
-
-            const data = await response.json();
-            console.log('Post created:', data); router.push('/home');
-        } catch (err) {
-            console.error('Error creating post:', err);
         }
     };
 
@@ -44,7 +45,7 @@ const CreatePost = () => {
             <h1 className="text-2xl font-bold mb-4">Create Post</h1>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <textarea
-                    placeholder="What's on your mind?"
+                    placeholder="Type here"
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     className="input"

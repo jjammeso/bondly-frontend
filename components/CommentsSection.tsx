@@ -59,8 +59,8 @@ const CommentsSection = ({ postId }: Props) => {
         setComments((prev) => [
           ...prev,
           {
-            comment_id: added.commentId,
-            user_id: user?.user_id!,
+            comment_id: Number(added.commentId),
+            user_id: Number(user?.user_id),
             content: newComment,
             username: user?.username || 'CurrentUser',
             created_at: new Date().toISOString(),

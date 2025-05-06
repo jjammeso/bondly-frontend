@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { redirect, useRouter } from 'next/navigation';
+import {  useRouter } from 'next/navigation';
 import { useAuth } from '@/contex/AuthContext';
 import { FcGoogle } from "react-icons/fc";
 
@@ -9,7 +9,7 @@ const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const {authorized, setAuthorized} = useAuth();
+    const { setAuthorized} = useAuth();
     const router = useRouter();
 
     const handleLogin = async (e: React.FormEvent) => {
@@ -90,7 +90,7 @@ const LoginPage = () => {
 
                 {/* Link to Register Page */}
                 <p className="text-center mt-4 text-sm">
-                    Don't have an account?{' '}
+                    Don&apos;t have an account?{' '}
                     <a href="/register" className="text-blue-600 hover:underline">
                         Register here
                     </a>

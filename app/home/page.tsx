@@ -5,12 +5,17 @@ import CommentsSection from '@/components/CommentsSection';
 import LikeButton from '@/components/LikeButton';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { getLoggedInUser, getToken } from '@/lib/auth';
-import { useRouter } from 'next/navigation';
+
+interface Post {
+    post_id: number;
+    content: string;
+    username: string;
+    created_at: string;
+  }
 
 const Home = () => {
-    const [posts, setPosts] = useState<any[]>([]);
+    const [posts, setPosts] = useState<Post[]>([]);
     const [content, setContent] = useState('');
-    const router = useRouter();
 
     const user = getLoggedInUser();
     const token = getToken();
@@ -38,13 +43,13 @@ const Home = () => {
             const data = await response.json();
             console.log('Post created:', data);
             setContent('');
-            router.push('/home');
+
+            await fetchPosts();
         } catch (err) {
             console.error('Error creating post:', err);
         }
     };
 
-    useEffect(() => {
         const fetchPosts = async () => {
             try {
                 const response = await fetch('http://localhost:5000/api/posts', {
@@ -65,8 +70,10 @@ const Home = () => {
                 console.error(err);
             }
         };
-        if (token) fetchPosts();
-    }, []);
+
+        useEffect(() => {
+            if (token) fetchPosts();
+        }, []);
 
     return (
         <ProtectedRoute>
@@ -75,7 +82,7 @@ const Home = () => {
                     <h1 className="text-2xl font-bold mb-4 text-center text-gray-800">Create a New Post</h1>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <textarea
-                            placeholder="What's on your mind?"
+                            placeholder="Type here"
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
                             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
